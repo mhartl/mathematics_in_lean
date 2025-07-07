@@ -165,6 +165,10 @@ example (a b : ℝ) : (a + b) * (a - b) = a ^ 2 - b ^ 2 := by
 
 end
 
+-- We can obtain the same result using the `ring` tactic.
+example (a b : ℝ) : (a + b) * (a - b) = a ^ 2 - b ^ 2 := by
+  ring
+
 -- Examples.
 
 section
@@ -175,6 +179,14 @@ example (a b c d : ℝ) (hyp : c = d * a + b) (hyp' : b = a * d) : c = 2 * a * d
   rw [mul_comm d a] at hyp
   rw [← two_mul (a * d)] at hyp
   rw [← mul_assoc 2 a d] at hyp
+  exact hyp
+
+-- Note that we can remove the variables and obtain the same result.
+example (a b c d : ℝ) (hyp : c = d * a + b) (hyp' : b = a * d) : c = 2 * a * d := by
+  rw [hyp'] at hyp
+  rw [mul_comm] at hyp
+  rw [← two_mul] at hyp
+  rw [← mul_assoc] at hyp
   exact hyp
 
 example : c * b * a = b * (a * c) := by
