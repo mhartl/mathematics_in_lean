@@ -164,10 +164,33 @@ theorem mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
   rw [← h, ← mul_assoc, inv_mul_cancel, one_mul]
 
 theorem mul_one (a : G) : a * 1 = a := by
-  sorry
+  rw [← inv_mul_cancel a,
+      ← mul_assoc,
+      mul_inv_cancel,
+      one_mul]
 
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ := by
-  sorry
+  rw [
+    ← one_mul (b⁻¹ * a⁻¹),
+    ← inv_mul_cancel (a * b),
+    mul_assoc,
+    mul_assoc,
+    ← mul_assoc b b⁻¹,
+    mul_inv_cancel,
+    one_mul,
+    mul_inv_cancel,
+    mul_one
+  ]
+
+-- Leaving this here in case I figure out how to apply the associative property
+-- in this opposite case:
+-- theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ := by
+--   rw [
+--     ← mul_one (b⁻¹ * a⁻¹),
+--     ← mul_inv_cancel (a * b),
+--     mul_assoc,
+--     ← mul_assoc a⁻¹ (a * b * (a * b)⁻¹)
+--   ]
 
 
 -- theorem mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
