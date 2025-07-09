@@ -2,6 +2,7 @@ import Mathlib.Algebra.Ring.Defs
 import Mathlib.Data.Real.Basic
 import MIL.Common
 
+
 variable (R : Type*) [Ring R]
 
 #check (add_assoc : ∀ a b c : R, a + b + c = a + (b + c))
@@ -13,7 +14,9 @@ variable (R : Type*) [Ring R]
 #check (mul_assoc : ∀ a b c : R, (a * b) * c = a * (b * c))
 #check (mul_one : ∀ a : R, a * 1 = a)
 #check (one_mul : ∀ a : R, 1 * a = a)
+-- Left distributive
 #check (mul_add : ∀ a b c : R, a * (b + c) = a * b + a * c)
+-- Right distributive
 #check (add_mul : ∀ a b c : R, (a + b) * c = a * c + b * c)
 
 variable (R : Type*) [CommRing R]
@@ -102,17 +105,36 @@ theorem neg_neg (a : R) : - -a = a := by
 
 end MyRing
 
+example (a b : R) : a - b = a + -b :=
+  sub_eq_add_neg a b
+
+-- Solved using the suggestion from `exact?`
+theorem self_sub_real (a : ℝ) : a - a = 0 := by
+  exact Lean.Grind.CommRing.sub_eq_zero_iff.mpr rfl
+
+
 namespace MyRing
 variable {R : Type*} [Ring R]
 
 theorem self_sub (a : R) : a - a = 0 := by
   rw [sub_eq_add_neg, add_neg_cancel]
+  -- Using `sub_self` from the `Group` module also works.
+  -- rw [sub_self]
 
 theorem one_add_one_eq_two : 1 + 1 = (2 : R) := by
   norm_num
 
 theorem two_mul (a : R) : 2 * a = a + a := by
   rw [← one_add_one_eq_two, add_mul, one_mul]
+
+-- theorem self_sub (a : R) : a - a = 0 := by
+--   rw [sub_eq_add_neg, add_neg_cancel]
+
+-- theorem one_add_one_eq_two : 1 + 1 = (2 : R) := by
+--   norm_num
+
+-- theorem two_mul (a : R) : 2 * a = a + a := by
+--   rw [← one_add_one_eq_two, add_mul, one_mul]
 
 end MyRing
 
