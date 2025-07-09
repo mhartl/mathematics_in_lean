@@ -139,21 +139,48 @@ theorem two_mul (a : R) : 2 * a = a + a := by
 end MyRing
 
 section
+
+variable (A : Type*) [AddGroup A]
+
+#check (add_assoc : ∀ a b c : A, a + b + c = a + (b + c))
+#check (zero_add : ∀ a : A, 0 + a = a)
+#check (neg_add_cancel : ∀ a : A, -a + a = 0)
+
 variable {G : Type*} [Group G]
+
+#check (mul_assoc : ∀ a b c : G, a * b * c = a * (b * c))
+#check (one_mul : ∀ a : G, 1 * a = a)
+#check (inv_mul_cancel : ∀ a : G, a⁻¹ * a = 1)
 
 namespace MyGroup
 
 theorem mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
   have h : (a * a⁻¹)⁻¹ * (a * a⁻¹ * (a * a⁻¹)) = 1 := by
-    rw [mul_assoc, ← mul_assoc a⁻¹ a, inv_mul_cancel, one_mul, inv_mul_cancel]
+    rw [mul_assoc,
+        ← mul_assoc a⁻¹ a,
+        inv_mul_cancel,
+        one_mul,
+        inv_mul_cancel]
   rw [← h, ← mul_assoc, inv_mul_cancel, one_mul]
 
 theorem mul_one (a : G) : a * 1 = a := by
-  rw [← inv_mul_cancel a, ← mul_assoc, mul_inv_cancel, one_mul]
+  sorry
 
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ := by
-  rw [← one_mul (b⁻¹ * a⁻¹), ← inv_mul_cancel (a * b), mul_assoc, mul_assoc, ← mul_assoc b b⁻¹,
-    mul_inv_cancel, one_mul, mul_inv_cancel, mul_one]
+  sorry
+
+
+-- theorem mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
+--   have h : (a * a⁻¹)⁻¹ * (a * a⁻¹ * (a * a⁻¹)) = 1 := by
+--     rw [mul_assoc, ← mul_assoc a⁻¹ a, inv_mul_cancel, one_mul, inv_mul_cancel]
+--   rw [← h, ← mul_assoc, inv_mul_cancel, one_mul]
+
+-- theorem mul_one (a : G) : a * 1 = a := by
+--   rw [← inv_mul_cancel a, ← mul_assoc, mul_inv_cancel, one_mul]
+
+-- theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ := by
+--   rw [← one_mul (b⁻¹ * a⁻¹), ← inv_mul_cancel (a * b), mul_assoc, mul_assoc, ← mul_assoc b b⁻¹,
+--     mul_inv_cancel, one_mul, mul_inv_cancel, mul_one]
 
 end MyGroup
 
