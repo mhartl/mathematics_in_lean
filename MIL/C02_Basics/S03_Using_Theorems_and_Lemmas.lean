@@ -38,13 +38,36 @@ example (x : ℝ) : x ≤ x :=
 
 #check (le_refl : ∀ a, a ≤ a)
 #check (le_trans : a ≤ b → b ≤ c → a ≤ c)
+#check (le_trans : a ≤ b → (b ≤ c → a ≤ c))
 #check (lt_of_le_of_lt : a ≤ b → b < c → a < c)
 #check (lt_of_lt_of_le : a < b → b ≤ c → a < c)
 #check (lt_trans : a < b → b < c → a < c)
 
 -- Try this.
 example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
-  sorry
+  have h : a < c := by
+    apply lt_of_le_of_lt h₀ h₁
+  have h' : c < e := by
+    apply lt_of_le_of_lt h₂ h₃
+  apply lt_trans h h'
+
+example (h₀ : a ≤ b) (h₁ : b < c) : a < c := by
+  apply lt_of_le_of_lt
+  · apply h₀
+  · apply h₁
+
+example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
+  apply lt_of_le_of_lt h₀
+  apply lt_trans h₁
+  exact lt_of_le_of_lt h₂ h₃
+
+-- From Grok:
+example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
+  apply lt_of_le_of_lt
+  · apply le_trans h₀
+    apply le_of_lt h₁
+  · apply lt_of_le_of_lt h₂ h₃
+
 
 example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
   linarith
@@ -124,4 +147,3 @@ example : |a*b| ≤ (a^2 + b^2)/2 := by
   sorry
 
 #check abs_le'.mpr
-
