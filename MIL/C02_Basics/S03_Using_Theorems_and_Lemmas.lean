@@ -152,8 +152,6 @@ example (h : a ≤ b) : c - exp b ≤ c - exp a := by
   apply sub_le_sub_left
   exact exp_le_exp.mpr h
 
--- ***here
-
 example : 2*a*b ≤ a^2 + b^2 := by
   have h : 0 ≤ a^2 - 2*a*b + b^2
   calc
@@ -172,7 +170,10 @@ example : 2*a*b ≤ a^2 + b^2 := by
     _ ≥ 0 := by apply pow_two_nonneg
   linarith
 
+-- ***maybe come back to this sometime (after Section 3.4?)
 example : |a*b| ≤ (a^2 + b^2)/2 := by
   sorry
 
+#check abs_le
+#check abs_le'
 #check abs_le'.mpr
