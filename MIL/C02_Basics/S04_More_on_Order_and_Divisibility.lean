@@ -10,6 +10,32 @@ variable (a b c d : ℝ)
 #check (min_le_right a b : min a b ≤ b)
 #check (le_min : c ≤ a → c ≤ b → c ≤ min a b)
 
+#check (le_max_left a b : a ≤ max a b)
+#check (le_max_right a b : b ≤ max a b )
+#check (max_le : a ≤ c → b ≤ c → max a b ≤ c)
+
+example : min a b ≤ min b a := by
+  -- Goal 1: `c ≤ a →`
+  -- Goal 2: `c ≤ b →`
+  -- Conclusion: `b ≤ min a b`
+  -- The example is `min a b ≤ min b a`, which has the form
+  --   `min a b ≤ b → min a b ≤ a → min a b ≤ min b a`
+  -- Note in particular that `min b a` on the right-hand side reverses the
+  -- order of `a` and `b` from the definition. This gives the subgoals
+  -- Goal 1: `min a b ≤ b →`
+  -- Goal 2: `min a b ≤ a →`
+  -- Conclusion: `min a b ≤ min b a`
+  -- Applying `le_min` introduces the goals
+  -- 1. `min a b ≤ b`
+  -- 2. `min a b ≤ a`
+  apply le_min
+    -- Fulfills `min a b ≤ b`
+  · apply min_le_right
+  -- Fulfills `min a b ≤ a`
+  apply min_le_left
+  -- Since both goals are fulfilled, the relation follows.
+
+
 example : min a b = min b a := by
   apply le_antisymm
   · show min a b ≤ min b a
@@ -28,8 +54,22 @@ example : min a b = min b a := by
     apply min_le_right
     apply min_le_left
   apply le_antisymm
+  -- "The first `apply` after `le_antisymm` implicitly uses `h a b`,
+  --  whereas the second one uses `h b a`."
+  -- Possibly confusing; see below for an explicit version.
   apply h
   apply h
+
+example : min a b = min b a := by
+  have h : ∀ x y : ℝ, min x y ≤ min y x := by
+    intro x y
+    apply le_min
+    apply min_le_right
+    apply min_le_left
+  apply le_antisymm
+  -- Explicit application of both orders of argument
+  apply h a b
+  apply h b a
 
 example : min a b = min b a := by
   apply le_antisymm
@@ -38,8 +78,26 @@ example : min a b = min b a := by
     apply min_le_right
     apply min_le_left
 
+-- Explicit version
 example : max a b = max b a := by
-  sorry
+  apply le_antisymm
+  · show max a b ≤ max b a
+    apply max_le
+    · apply le_max_right
+    apply le_max_left
+  · show max b a ≤ max a b
+    apply max_le
+    · apply le_max_right
+    apply le_max_left
+
+-- Shorter version
+example : max a b = max b a := by
+  apply le_antisymm
+  repeat
+    apply max_le
+    apply le_max_right
+    apply le_max_left
+
 example : min (min a b) c = min a (min b c) := by
   sorry
 theorem aux : min a b + c ≤ min (a + c) (b + c) := by
@@ -80,5 +138,3 @@ variable (m n : ℕ)
 example : Nat.gcd m n = Nat.gcd n m := by
   sorry
 end
-
-
