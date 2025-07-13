@@ -132,7 +132,7 @@ example : min (min a b) c = min a (min b c) := by
   apply min_le_right  -- c ≤ c
 
 
--- Grok's initial answer
+-- Grok's initial (incorrect) answer
 example : b ≤ max a (max b c) := by
   apply le_trans
   · apply le_max_left
@@ -154,9 +154,16 @@ example : b ≤ max a (max b c) := by
   · apply le_max_left b c  -- force args to be `b c`
   -- Prove max b c ≤ max a (max b c)
   apply le_max_right  -- implicit args `a (max b c)`
-  --
 
--- ***here
+example : c ≤ max a (max b c) := by
+  apply le_trans
+  -- Need to prove c ≤ max b c ∧ max b c ≤ max a (max b c)
+  -- to conclude c ≤ max a (max b c) by transitivity.
+  -- Prove c ≤ max b c
+  · apply le_max_right b c  -- force args to be `b c`
+  -- Prove max b c ≤ max a (max b c)
+  apply le_max_right  -- implicit args `a (max b c)`
+
 
 example : max (max a b) c = max a (max b c) := by
   apply le_antisymm
@@ -164,52 +171,53 @@ example : max (max a b) c = max a (max b c) := by
   -- Introduce two subgoals
   apply max_le
     -- Must show:
-    --   max a b ≤ max a (max b c)
+    --   1. max a b ≤ max a (max b c)
     -- and
-    --   c ≤ max a (max b c)
-    -- First subgoal: max a b ≤ max a (max b c)
+    --   2. c ≤ max a (max b c)
+    -- 1. subgoal: max a b ≤ max a (max b c)
     -- Introduce two subsubgoals
   · apply max_le
       -- Must show subsubgoals:
-      --   a ≤ max a (max b c)
-      --   b ≤ max a (max b c)
+      --   1'. a ≤ max a (max b c)
+      --   2'. b ≤ max a (max b c)
+    -- 1'. a ≤ max a (max b c)
     apply le_max_left
-    -- Need subsubgoal for b ≤ max a (max b c)
+    -- 2'. b ≤ max a (max b c)
+    -- Need subsubgoal
     apply le_trans
-      · apply le_max_right
-    -- apply le_max_right
-    -- · apply le_max_left  -- a ≤ a
-    -- Now show b ≤ max a (max b c)
-    -- apply le_trans
-    -- Must show that b ≤ max (b c) ≤ b
-    -- apply le_max_right  --
-    -- apply le_max_left
-  --   · apply le_trans
-  --     apply min_le_left   -- min a b ≤ a
-  --     apply min_le_left   -- a ≤ a → Subgoal accomplished
-  --   -- Second subgoal: min (min a b) c ≤ c
-  --   apply le_min
-  --   · apply le_trans
-  --     apply min_le_left
-  --     apply min_le_right
-  --   apply min_le_right
-  -- -- Prove min a (min b c) ≤ min (min a b) c
-  -- -- Introduce two subgoals
-  -- apply le_min
-  -- -- First subgoal: min a (min b c) ≤ min (a b)
-  -- · apply le_min
-  --   -- Introduce two subsubgoals
-  --   -- First subsubgoal: min a (min b c) ≤ a
-  --   · apply min_le_left
-  --   -- Second subsubgoal: min a (min b c) ≤ b
-  --   apply le_trans
-  --   apply min_le_right
-  --   apply min_le_left
-  -- -- Second subgoal: min a (min b c) ≤ c
-  -- apply le_trans
-  -- -- Show that min a (min b c) ≤ c
-  -- apply min_le_right  -- min (b c) ≤ c
-  -- apply min_le_right  -- c ≤ c
+    -- Need to prove b ≤ max b c ∧ max b c ≤ max a (max b c)
+    -- to conclude b ≤ max a (max b c) by transitivity.
+    -- Prove b ≤ max b c
+    · apply le_max_left b c  -- force args to be `b c`
+    -- Prove max b c ≤ max a (max b c)
+    apply le_max_right  -- implicit args `a (max b c)`
+    -- 2. subgoal: c ≤ max a (max b c)
+  · apply le_trans
+    · apply le_max_right b c  -- force args to be `b c`
+    apply le_max_right  -- implicit args `a (max b c)`
+
+  -- Prove max a (max b c) ≤ max (max a b) c
+  apply max_le
+  -- 1. a ≤ max (max a b) c
+  · apply le_trans
+    · apply le_max_left a b
+    apply le_max_left
+  -- 2. max b c ≤ max (max a b) c
+  · apply max_le
+      -- Must show subsubgoals:
+      --   1'. b ≤ max (max a b) c
+      --   2'. c ≤ max (max a b) c
+    -- 1'. b ≤ max (max a b) c
+    -- Need subsubgoal
+    apply le_trans
+    -- Need to prove b ≤ max a b ∧ max a b ≤ max (max a b) c
+    -- to conclude b ≤ max (max a b) c by transitivity.
+    -- Prove b ≤ max a b
+    · apply le_max_right a b
+    -- Prove max a b ≤ max (max a b) c
+    apply le_max_left
+    -- 2'. subgoal: max (max a b) c
+    apply le_max_right
 
 theorem aux : min a b + c ≤ min (a + c) (b + c) := by
   sorry
