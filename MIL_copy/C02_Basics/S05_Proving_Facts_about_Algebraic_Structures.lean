@@ -106,8 +106,22 @@ variable (x y z : X)
 #check (dist_comm x y : dist x y = dist y x)
 #check (dist_triangle x y z : dist x z ≤ dist x y + dist y z)
 
+example (x y : X) (h : dist x y ≤ 2 * dist x y) : 0 ≤ dist x y := by
+  linarith
+
+-- Prove that $d(x, y) ≥ 0$.
+-- Use
+--    - `dist_self`
+--    - `dist_triangle`
+--    - `dist_comm`
 -- Cf. Theorem 14.63 in warner.pdf.
 example (x y : X) : 0 ≤ dist x y := by
-  sorry
+  have : 0 ≤ dist x y + dist y x := by
+    rw [← dist_self x]
+    apply dist_triangle x y x
+  have : dist x y + dist y x = 2 * dist x y := by
+    rw [dist_comm]
+    ring
+  linarith
 
 end
