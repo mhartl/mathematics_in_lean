@@ -36,41 +36,15 @@ example (x : ℝ) : x ≤ x := by
 example (x : ℝ) : x ≤ x :=
   le_refl x
 
-example (x : ℝ) : x ≤ x := by
-  linarith
-
 #check (le_refl : ∀ a, a ≤ a)
 #check (le_trans : a ≤ b → b ≤ c → a ≤ c)
-#check (le_trans : a ≤ b → (b ≤ c → a ≤ c))
 #check (lt_of_le_of_lt : a ≤ b → b < c → a < c)
 #check (lt_of_lt_of_le : a < b → b ≤ c → a < c)
 #check (lt_trans : a < b → b < c → a < c)
 
 -- Try this.
 example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
-  have h : a < c := by
-    apply lt_of_le_of_lt h₀ h₁
-  have h' : c < e := by
-    apply lt_of_le_of_lt h₂ h₃
-  apply lt_trans h h'
-
-example (h₀ : a ≤ b) (h₁ : b < c) : a < c := by
-  apply lt_of_le_of_lt
-  · apply h₀
-  · apply h₁
-
-example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
-  apply lt_of_le_of_lt h₀
-  apply lt_trans h₁
-  exact lt_of_le_of_lt h₂ h₃
-
--- From Grok:
-example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
-  apply lt_of_le_of_lt
-  · apply le_trans h₀
-    apply le_of_lt h₁
-  · apply lt_of_le_of_lt h₂ h₃
-
+  sorry
 
 example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by
   linarith
@@ -112,48 +86,21 @@ example (h₀ : a ≤ b) (h₁ : c < d) : a + exp c + e < b + exp d + e := by
     apply exp_lt_exp.mpr h₁
   apply le_refl
 
-example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by
-  apply add_le_add_left
-  rw [exp_le_exp]
-  apply add_le_add_left
-  exact h₀
-
-example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by
-  apply add_le_add_left
-  rw [exp_le_exp]
-  apply add_le_add_left h₀
-
--- an alternative using `linarith`.
-example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by
-  have : exp (a + d) ≤ exp (a + e) := by
-    rw [exp_le_exp]
-    linarith
-  linarith [this]    -- not yet covered in the text
+example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by sorry
 
 example : (0 : ℝ) < 1 := by norm_num
 
 example (h : a ≤ b) : log (1 + exp a) ≤ log (1 + exp b) := by
-  have h₀ : 0 < 1 + exp a := by linarith [exp_pos a]
+  have h₀ : 0 < 1 + exp a := by sorry
   apply log_le_log h₀
-  apply add_le_add_left
-  apply exp_le_exp.mpr h
+  sorry
 
 example : 0 ≤ a ^ 2 := by
   -- apply?
   exact sq_nonneg a
 
 example (h : a ≤ b) : c - exp b ≤ c - exp a := by
-  apply add_le_add_left
-  -- I needed to cancel the minus signs and asked Grok for help. The result was
-  -- `neg_le_neg`, which hasn't been covered yet and the official solutions also
-  -- use a function (`sub_le_sub_left`) that is out of scope at this point.
-  -- Glad I didn't burn a lot of time trying to figure out the answer.
-  apply neg_le_neg
-  apply exp_le_exp.mpr h
-
-example (h : a ≤ b) : c - exp b ≤ c - exp a := by
-  apply sub_le_sub_left
-  exact exp_le_exp.mpr h
+  sorry
 
 example : 2*a*b ≤ a^2 + b^2 := by
   have h : 0 ≤ a^2 - 2*a*b + b^2
@@ -173,10 +120,8 @@ example : 2*a*b ≤ a^2 + b^2 := by
     _ ≥ 0 := by apply pow_two_nonneg
   linarith
 
--- ***maybe come back to this sometime (after Section 3.4?)
 example : |a*b| ≤ (a^2 + b^2)/2 := by
   sorry
 
-#check abs_le
-#check abs_le'
 #check abs_le'.mpr
+

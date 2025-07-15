@@ -6,7 +6,6 @@ variable {α : Type*} [PartialOrder α]
 variable (x y z : α)
 
 #check x ≤ y
-#check y ≤ x
 #check (le_refl x : x ≤ x)
 #check (le_trans : x ≤ y → y ≤ z → x ≤ z)
 #check (le_antisymm : x ≤ y → y ≤ x → x = y)
@@ -110,3 +109,4 @@ example (x y : X) : 0 ≤ dist x y := by
   sorry
 
 end
+
