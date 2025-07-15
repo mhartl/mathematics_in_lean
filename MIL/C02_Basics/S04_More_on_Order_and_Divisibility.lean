@@ -227,6 +227,7 @@ example : min a b + c = min (a + c) (b + c) := by
 
 example : |a| - |b| ≤ |a - b| :=
   sorry
+
 end
 
 section
@@ -235,6 +236,10 @@ variable (w x y z : ℕ)
 example (h₀ : x ∣ y) (h₁ : y ∣ z) : x ∣ z :=
   dvd_trans h₀ h₁
 
+example : x ∣ y * x := by
+  apply dvd_mul_of_dvd_right
+  apply dvd_refl
+
 example : x ∣ y * x * z := by
   apply dvd_mul_of_dvd_left
   apply dvd_mul_left
@@ -242,12 +247,24 @@ example : x ∣ y * x * z := by
 example : x ∣ x ^ 2 := by
   apply dvd_mul_left
 
+example : x ∣ x ^ 2 := by
+  rw [pow_two]
+  apply dvd_mul_right
+
+
 example (h : x ∣ w) : x ∣ y * (x * z) + x ^ 2 + w ^ 2 := by
   sorry
 end
 
 section
 variable (m n : ℕ)
+
+-- Attempts to mimic set inclusion.
+-- #check (1 : ℕ)
+-- #check ¬ (1.0 : ℕ)
+-- #check 1 ∈ {n : ℕ | n ≥ 0}
+-- #check 0 ∈ {n : ℕ | n > 0}
+-- #check (1.0 : ℕ)
 
 #check (Nat.gcd_zero_right n : Nat.gcd n 0 = n)
 #check (Nat.gcd_zero_left n : Nat.gcd 0 n = n)

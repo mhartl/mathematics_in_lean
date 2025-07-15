@@ -36,6 +36,9 @@ example (x : ℝ) : x ≤ x := by
 example (x : ℝ) : x ≤ x :=
   le_refl x
 
+example (x : ℝ) : x ≤ x := by
+  linarith
+
 #check (le_refl : ∀ a, a ≤ a)
 #check (le_trans : a ≤ b → b ≤ c → a ≤ c)
 #check (le_trans : a ≤ b → (b ≤ c → a ≤ c))

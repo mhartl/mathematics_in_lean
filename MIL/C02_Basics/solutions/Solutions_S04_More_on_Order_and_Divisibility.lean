@@ -48,7 +48,8 @@ theorem aux : min a b + c ≤ min (a + c) (b + c) := by
 example : min a b + c = min (a + c) (b + c) := by
   apply le_antisymm
   · apply aux
-  have h : min (a + c) (b + c) = min (a + c) (b + c) - c + c := by rw [sub_add_cancel]
+  have h : min (a + c) (b + c) = min (a + c) (b + c) - c + c := by
+    rw [sub_add_cancel]
   rw [h]
   apply add_le_add_right
   rw [sub_eq_add_neg]
@@ -114,4 +115,3 @@ example : Nat.gcd m n = Nat.gcd n m := by
     apply Nat.gcd_dvd_left
 
 end
-
