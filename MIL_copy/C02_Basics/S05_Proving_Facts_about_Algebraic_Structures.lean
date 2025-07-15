@@ -106,6 +106,7 @@ variable (x y z : X)
 #check (dist_comm x y : dist x y = dist y x)
 #check (dist_triangle x y z : dist x z ≤ dist x y + dist y z)
 
+-- Cf. Theorem 14.63 in warner.pdf.
 example (x y : X) : 0 ≤ dist x y := by
   sorry
 
